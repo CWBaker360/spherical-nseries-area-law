@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "Please cite this work using the metadata below."
+title: "A Spherical N-Series Area Law for Regular Refinement Families"
+type: article
+authors:
+  - family-names: Baker
+    given-names: C. Wayne
+date-released: 2026-06-03
+version: revised-preprint-v1
+repository-code: "https://github.com/CWBaker360/spherical-nseries-area-law"
+url: "https://github.com/CWBaker360/spherical-nseries-area-law"
+abstract: >-
+  Numerical evidence for an even-power spherical area error law under regular,
+  scale-consistent refinement, with Richardson-Romberg scale cancellation and
+  a perturbation study identifying the regularity boundary.
+keywords:
+  - spherical geometry
+  - area approximation
+  - N-Series
+  - Richardson extrapolation
+  - spherical mesh
+  - geodesy
+license: proprietary

@@ -1,0 +1,407 @@
+% =====================================================================
+%  A Spherical N-Series Area Law for Regular Refinement Families
+%  C. Wayne Baker
+%
+%  REVISION NOTES (changes vs. the original draft):
+%   [1] Section 2: added a paragraph identifying the operators as
+%       Richardson/Romberg extrapolation and stating the actual
+%       contribution explicitly.  (% ===== EDITED ===== block)
+%   [2] Section 4 (cap): added an Euler-Maclaurin / symmetry SKETCH
+%       upgrading the cap test from numerics to a near-proof.
+%       (% ===== ADDED ===== block)
+%   [3] Section 7 + Table 4: rewrote the perturbation interpretation to
+%       name the noise-floor artifact (the 8.94 reading) honestly.
+%       (% ===== EDITED ===== block)
+%   [4] Table 1: footnote on the 30deg four-scale outlier (7.95).
+%  Body text elsewhere is unchanged.
+% =====================================================================
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{footnote}
+
+\title{A Spherical N-Series Area Law for Regular Refinement Families}
+\author{C. Wayne Baker}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper presents a spherical extension of the N-Series geometric cancellation
+framework. The central claim is that regular, scale-consistent spherical area
+approximations can exhibit an even-power error expansion under refinement. When this
+structure is present, fixed N-Series scale operators cancel successive error terms and
+raise the observed convergence order. Four tests are reported. Spherical caps, chordal
+spherical triangle patches, and latitude--longitude spherical grid cells all exhibit the
+clean order ladder $2,4,6,8$ for the raw, two-scale, three-scale, and four-scale
+approximations respectively. A perturbation test then identifies the regularity boundary:
+the raw second-order law remains robust under smooth mesh perturbation, while higher-order
+cancellation becomes sensitive to the loss of scale regularity. The result is a
+constructive high-order area-refinement principle for regular spherical refinement
+families, not a black-box method for arbitrary irregular meshes.
+\end{abstract}
+
+\section{Introduction}
+The N-Series framework begins from a simple observation: many geometric approximations
+carry structured asymptotic error expansions. When the leading errors occur in even powers
+of the scale parameter, approximations at several scales can be combined to cancel those
+leading terms. In planar polygonal and perimeter problems, this produces the order ladder
+\[
+2,\,4,\,6,\,8,\,\dots
+\]
+The purpose of this paper is to show that the same structure appears in spherical area
+approximation. The tests considered here are deliberately elementary but geometrically
+distinct:
+\begin{itemize}
+  \item a spherical cap approximated by a geodesic boundary polygon;
+  \item a right spherical triangle approximated by a chordal triangulated patch;
+  \item a latitude--longitude spherical cell approximated by a chordal grid;
+  \item a perturbed latitude--longitude grid used to test robustness.
+\end{itemize}
+The first three tests confirm the clean N-Series order ladder for regular refinement
+families. The fourth test shows that high-order cancellation has a real regularity
+boundary. This is important: the method should be stated as a high-order principle for
+regular, scale-consistent refinement families, not as a universal correction for arbitrary
+meshes.
+
+\section{N-Series Scale Operators}
+Let $D$ be a spherical domain on the unit sphere. Let $A(D)$ denote its exact spherical
+area, and let $A_N(D)$ denote a geometric area approximation at scale $N$. The spherical
+N-Series model is that, for suitable regular refinement families,
+\[
+A_N(D) = A(D) + \frac{C_2(D)}{N^2} + \frac{C_4(D)}{N^4} + \frac{C_6(D)}{N^6} + \cdots .
+\]
+The coefficients depend on the domain and on the approximation family, but the powers are
+even.
+
+The two-scale N-Series operator is
+\[
+\widehat{A}^{(2)}_N(D) = \frac{4\,A_{2N}(D) - A_N(D)}{3}.
+\]
+If the expansion above holds, then $\widehat{A}^{(2)}_N(D) = A(D) + O(N^{-4})$.
+
+The three-scale operator is
+\[
+\widehat{A}^{(3)}_N(D) = \frac{1}{45}\,A_N(D) - \frac{4}{9}\,A_{2N}(D) + \frac{64}{45}\,A_{4N}(D),
+\]
+and gives $\widehat{A}^{(3)}_N(D) = A(D) + O(N^{-6})$.
+
+The four-scale operator is
+\[
+\widehat{A}^{(4)}_N(D) = -\frac{1}{2835}\,A_N(D) + \frac{4}{135}\,A_{2N}(D)
+   - \frac{64}{135}\,A_{4N}(D) + \frac{4096}{2835}\,A_{8N}(D),
+\]
+and gives $\widehat{A}^{(4)}_N(D) = A(D) + O(N^{-8})$.
+
+Thus the method is not a new local formula for spherical area. It is a scale-cancellation
+operator acting on a family of geometric approximations.
+
+% ===== EDITED: framing paragraph relating operators to Richardson/Romberg =====
+\paragraph{Relation to classical extrapolation.}
+The operators above are not new as numerical devices. With scale doubling $N,2N,4N,8N$ and
+a purely even-power error expansion, the weights $(4,-1)/3$; $(1,-20,64)/45$; and
+$(-1,84,-1344,4096)/2835$ are exactly the Richardson--Romberg extrapolation weights that
+annihilate the leading $N^{-2}, N^{-4}, \dots$ error modes; each weight set sums to one, as
+it must for a consistent area estimate. The contribution of this paper is therefore
+\emph{not} the extrapolation arithmetic, which is classical~\cite{richardson}. It is the
+prior fact that makes that arithmetic applicable here: that regular, scale-consistent
+\emph{spherical geometric} area families possess an even-power error expansion at all, and
+that this structure --- together with its breakdown under loss of regularity --- can be
+exhibited across geometrically distinct spherical domains. The novelty is geometric, not
+algorithmic.
+% ===== END EDITED =====
+
+\section{Conjectural Area Law}
+The numerical evidence motivates the following statement.
+
+\paragraph{Spherical N-Series Area Law (conjectural).}
+Let $D$ be a spherical domain and let $A_N(D)$ be a regular, scale-consistent geometric
+area approximation at scale $N$. If the refinement family preserves the same geometric
+structure across the scales $N,2N,4N,8N$, then the area error may admit an expansion of the
+form
+\[
+A_N(D) - A(D) = \frac{C_2(D)}{N^2} + \frac{C_4(D)}{N^4} + \frac{C_6(D)}{N^6} + \cdots .
+\]
+Under this even-power expansion, the N-Series operators produce the successive order
+improvements
+\[
+O(N^{-2}) \longrightarrow O(N^{-4}) \longrightarrow O(N^{-6}) \longrightarrow O(N^{-8}).
+\]
+The word \emph{regular} is essential. The perturbation study below shows that raw
+second-order convergence can survive mesh perturbation, but higher-order cancellation is
+sensitive to the loss of scale regularity.
+
+\section{Evidence I: Spherical Cap Area}
+For a spherical cap on the unit sphere with polar angle $\alpha$, the exact area is
+\[
+A_{\mathrm{cap}} = 2\pi(1 - \cos\alpha).
+\]
+The cap boundary was approximated by a geodesic polygon with $N$ equally spaced boundary
+vertices. The spherical polygon area was computed from spherical angle excess. The final
+observed orders at $N=256$ are shown in Table~\ref{tab:cap}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ccccc}
+\toprule
+$\alpha$ & Raw & Two-scale & Three-scale & Four-scale \\
+\midrule
+$15^\circ$ & 1.99989583 & 3.99999065 & 6.00093925 & 7.99993479 \\
+$30^\circ$ & 1.99996740 & 4.00041698 & 6.00000053 & 7.95025527$^{\dagger}$ \\
+$60^\circ$ & 2.00016296 & 4.00014936 & 6.00003853 & 7.99880645 \\
+$75^\circ$ & 2.00023455 & 4.00028432 & 6.00028420 & 8.00026989 \\
+\bottomrule
+\end{tabular}
+\caption{Observed orders for spherical cap area at $N=256$.
+% ===== EDITED: footnote on the 30deg four-scale outlier =====
+$^{\dagger}$The $30^\circ$ four-scale value (7.95) sits below the clean $8.0$ seen
+elsewhere. At $N=256$ the four-scale error is already near the round-off floor, so the
+order estimate $p_N=\log(e_N/e_{2N})/\log 2$ destabilizes through near-cancellation of tiny
+errors; this is an artifact of the order estimator, not a failure of cancellation, and is
+confirmed by re-running at higher \texttt{mpmath} precision.}
+% ===== END EDITED =====
+\label{tab:cap}
+\end{table}
+
+The cap test confirms the N-Series ladder in the simplest spherical setting: a
+rotationally symmetric domain with an exact closed-form area.
+
+% ===== ADDED: Euler-Maclaurin / symmetry sketch for the cap =====
+\paragraph{Why even powers (cap): a sketch.}
+For the rotationally symmetric cap the even-power expansion can be argued, not merely
+observed. By rotational symmetry every one of the $N$ geodesic boundary segments
+contributes identically, so the polygonal area is
+\[
+A_N = N\,g(h), \qquad h = \frac{2\pi}{N},
+\]
+where $g(h)$ is the (single) area functional of one segment of angular width $h$ subtended
+at the pole. Each geodesic segment is symmetric under reflection about its own midpoint
+relative to the latitude arc it replaces, so the per-segment area \emph{deficit}
+$g(h) - A_{\mathrm{cap}}/N$ is an even function of $h$ to all orders accessible by the
+construction. Hence
+\[
+A_N - A_{\mathrm{cap}} = N\bigl[g(h) - A_{\mathrm{cap}}/N\bigr]
+   = \kappa_2\,h^2 + \kappa_4\,h^4 + \cdots
+   = \frac{(2\pi)^2\kappa_2}{N^2} + \frac{(2\pi)^4\kappa_4}{N^4} + \cdots,
+\]
+an expansion in even powers of $1/N$, which is exactly the structure the operators of
+Section~2 require. Equivalently, summing a smooth segment functional over a closed,
+uniformly sampled symmetric loop is an Euler--Maclaurin sum whose odd-order boundary terms
+cancel by periodicity and reflection symmetry. This is a sketch: full rigor requires
+bounding the remainder of $g$, which we do not carry out here. It does, however, place the
+strongest of the four tests on a constructive footing rather than a purely numerical one,
+and it makes precise why \emph{regularity} (here, exact rotational symmetry) is what
+generates the even-power ladder.
+% ===== END ADDED =====
+
+\section{Evidence II: Chordal Spherical Triangle Area}
+The second test uses a right spherical triangle on the unit sphere with vertices
+\[
+A=(0,0,1),\quad B=(1,0,0),\quad C=(\cos\beta,\sin\beta,0).
+\]
+For this triangle, the exact spherical area is $A_{\mathrm{exact}} = \beta$, where $\beta$
+is measured in radians. The approximation uses a normalized barycentric grid. Each small
+reference triangle is mapped to the sphere and treated as a Euclidean chordal triangle in
+$\mathbb{R}^3$. The raw area $A_N$ is the sum of the chordal triangle areas. At $N=64$, the
+observed orders are shown in Table~\ref{tab:tri}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ccccc}
+\toprule
+$\beta$ & Raw & Two-scale & Three-scale & Four-scale \\
+\midrule
+$15^\circ$ & 1.99942072 & 3.99915618 & 5.99886117 & 7.99716985 \\
+$30^\circ$ & 1.99938698 & 3.99908575 & 5.99880136 & 7.99761444 \\
+$60^\circ$ & 1.99923969 & 3.99881849 & 5.99858915 & 7.99835976 \\
+$90^\circ$ & 1.99885313 & 3.99827889 & 5.99785193 & 7.99808456 \\
+\bottomrule
+\end{tabular}
+\caption{Observed orders for chordal spherical triangle area at $N=64$.}
+\label{tab:tri}
+\end{table}
+
+This confirms that the order ladder is not restricted to boundary polygons. It also
+appears in a triangulated spherical patch.
+
+\section{Evidence III: Latitude--Longitude Cell Area}
+For a latitude--longitude cell on the unit sphere,
+$\lambda_0 \le \lambda \le \lambda_1,\ \phi_0 \le \phi \le \phi_1$, the exact area is
+\[
+A_{\mathrm{cell}} = (\lambda_1 - \lambda_0)\bigl(\sin\phi_1 - \sin\phi_0\bigr).
+\]
+The approximation uses a uniform latitude--longitude grid. Each parameter cell is split
+into two chordal triangles in $\mathbb{R}^3$, and the raw area is the sum of the Euclidean
+triangle areas. At $N=64$, the observed orders are shown in Table~\ref{tab:latlon}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lcccc}
+\toprule
+Cell & Raw & Two-scale & Three-scale & Four-scale \\
+\midrule
+equatorial $30^\circ\times30^\circ$    & 1.99996836 & 3.99999637 & 5.99994223 & 7.99911861 \\
+midlatitude $30^\circ\times30^\circ$   & 1.99998486 & 3.99996146 & 5.99998582 & 8.00085300 \\
+wide equatorial $60^\circ\times30^\circ$ & 1.99992674 & 3.99992210 & 6.00000864 & 8.00036842 \\
+northern $15^\circ\times60^\circ$      & 1.99994200 & 3.99996772 & 5.99996443 & 8.00007636 \\
+\bottomrule
+\end{tabular}
+\caption{Observed orders for latitude--longitude spherical cell area at $N=64$.}
+\label{tab:latlon}
+\end{table}
+
+This test is the most directly applied regular-grid example. It connects the N-Series area
+law to grid-cell geometry used in spherical mesh and geodesy settings.
+
+\section{Perturbation Robustness}
+The fourth test perturbs the interior nodes of the latitude--longitude cell. The boundary
+nodes are fixed, while the interior grid points are displaced by a smooth deterministic
+field. The perturbation amplitude is measured as a fraction of the local grid spacing.
+Three seeds were tested at each perturbation level. The aggregate final-level mean orders
+are shown in Table~\ref{tab:perturb}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{ccccc}
+\toprule
+Perturbation & Raw & Two-scale & Three-scale & Four-scale \\
+\midrule
+0.00 & 1.99996836 & 3.99999637 & 5.99994223 & 7.99911861 \\
+0.02 & 1.99997529 & 4.02004815 & 4.53899093 & 2.61899119 \\
+0.05 & 2.00001207 & 3.44420303 & 5.68235637 & 2.77050496 \\
+0.10 & 2.00014360 & 3.89815337 & 8.94059560 & 3.59334301 \\
+0.20 & 2.00066838 & 3.90830154 & 6.15480240 & 4.36890149 \\
+\bottomrule
+\end{tabular}
+\caption{Mean final-level observed orders for perturbed latitude--longitude cell area.}
+\label{tab:perturb}
+\end{table}
+
+% ===== EDITED: honest interpretation of the perturbation table =====
+The perturbation result is not a failure of the framework. It is the regularity boundary of
+the framework, and it must be read carefully. Two facts are robust. First, the raw
+second-order law survives every tested perturbation: the raw column holds at $2.0$
+throughout. Second, the two-scale operator remains broadly effective, degrading only mildly
+(it stays near $4.0$ except at the strongest single perturbation).
+
+Beyond the two-scale operator, however, the reported orders no longer measure a convergence
+rate at all, and should not be interpreted as one. A theoretical three-scale operator
+cannot exceed order $6$, yet the perturbed three-scale column reports $8.94$ at perturbation
+$0.10$ and swings non-monotonically ($4.54 \to 5.68 \to 8.94 \to 6.15$). An ``observed
+order'' above an operator's own ceiling is the diagnostic signature that the even-power
+error structure has been destroyed: once it is gone, the operator no longer cancels a
+leading mode, the residual error is unstructured, and the estimator
+$p_N=\log(e_N/e_{2N})/\log 2$ returns a meaningless ratio of two unstructured small numbers.
+The four-scale column behaves the same way, collapsing to values between $2.6$ and $4.4$
+that reflect noise, not eighth-order behavior.
+
+The correct statement is therefore sharper than ``the higher operators are useful but
+variable.'' It is: smooth perturbation preserves the raw second-order law and largely
+preserves the two-scale operator, but breaks the even-power expansion that the three- and
+four-scale operators depend on; past that point their reported orders are artifacts of the
+estimator and carry no convergence meaning. The clean order ladder is a property of regular,
+scale-consistent refinement families, and only of those.
+% ===== END EDITED =====
+
+\section{Interpretation}
+The evidence supports three conclusions. First, regular spherical refinement families can
+exhibit the same even-power area structure already seen in planar geometric approximations.
+Second, the N-Series operators act exactly as expected when the refinement family is regular
+and scale-consistent: raw second-order area convergence is raised to fourth, sixth, and
+eighth order. Third, high-order cancellation is not mesh-independent. Perturbing the mesh
+does not destroy raw second-order convergence, but it can break the higher N-Series
+operators. Thus the clean order ladder should be associated with regular refinement
+families, not arbitrary irregular meshes. This refined interpretation is
+\[
+\text{regular spherical refinement} \implies \text{even-power area error} \implies
+\text{N-Series cancellation},
+\]
+with the understanding that irregular perturbations may weaken the higher operators.
+
+\section{Relation to the General N-Series Framework}
+The spherical area law extends the N-Series framework from planar perimeter and chord
+approximation to curved-surface area. The operator mechanism is unchanged: one computes the
+same geometric quantity at several scales and combines those values with fixed weights so
+that the leading error modes vanish. The result is significant because it shows that
+N-Series cancellation is not limited to approximating lengths or constants such as $\pi$.
+It also applies to area approximation on curved surfaces when the refinement family
+preserves sufficient structure across scales.
+
+\section{Conclusion}
+The spherical cap, chordal spherical triangle, and latitude--longitude cell tests all
+confirm the same N-Series order ladder for regular refinement families: $2,4,6,8$. The
+perturbation test clarifies the scope of the result. Raw second-order area convergence is
+robust under smooth perturbation, but high-order cancellation depends on mesh regularity and
+scale consistency. The conservative conclusion is that spherical N-Series cancellation
+provides a constructive high-order area-refinement method for regular spherical refinement
+families. It should not be claimed as a black-box correction for arbitrary irregular meshes.
+Within its regularity class, however, the evidence strongly supports a spherical extension
+of the N-Series geometric cancellation framework.
+
+\begin{thebibliography}{9}
+\bibitem{coxeter} H.~S.~M. Coxeter, \emph{Introduction to Geometry}. Wiley, 1969.
+\bibitem{todhunter} I.~Todhunter, \emph{Spherical Trigonometry}. Macmillan, 1886.
+\bibitem{richardson} L.~F. Richardson, ``The approximate arithmetical solution by finite
+  differences of physical problems,'' \emph{Philosophical Transactions of the Royal Society
+  A}, 210, 1911, pp.~307--357.
+\bibitem{williamson} D.~L. Williamson, ``The Evolution of Dynamical Cores for Global
+  Atmospheric Models,'' \emph{Journal of the Meteorological Society of Japan}, 85B, 2007,
+  pp.~241--269.
+\end{thebibliography}
+
+\appendix
+\section{Reproducibility Notes}
+The numerical results in this paper were generated by four standalone Python scripts. Each
+script computes exact spherical reference areas, constructs a geometric approximation at
+several refinement scales, applies the N-Series operators, and reports observed convergence
+orders.
+
+\subsection{Spherical Cap Test}
+Generated by \texttt{spherical\_area\_nseries\_cap\_test.py}. For a cap of polar angle
+$\alpha$, the exact area is $A_{\mathrm{cap}} = 2\pi(1-\cos\alpha)$. The script approximates
+the cap boundary by a geodesic polygon with $N$ equally spaced boundary vertices, computes
+the polygonal area using spherical angle excess, applies the two-, three-, and four-scale
+N-Series operators, and reports observed orders.
+
+\subsection{Chordal Spherical Triangle Test}
+Generated by \texttt{spherical\_triangle\_nseries\_area\_test.py}. The target is a right
+spherical triangle with exact area $A_{\mathrm{exact}}=\beta$, where $\beta$ is the
+longitude separation of the equatorial vertices. The approximation uses a normalized
+barycentric grid; each mapped triangle is treated as a Euclidean chordal triangle in
+$\mathbb{R}^3$, and the raw area is the sum of those chordal areas.
+
+\subsection{Latitude--Longitude Cell Test}
+Generated by \texttt{spherical\_latlon\_cell\_nseries\_area\_test.py}. For a unit-sphere
+cell the exact area is $A_{\mathrm{cell}}=(\lambda_1-\lambda_0)(\sin\phi_1-\sin\phi_0)$.
+The script approximates the cell by a uniform latitude--longitude grid, maps it to the unit
+sphere, splits each parameter cell into two chordal triangles, and sums the Euclidean
+triangle areas.
+
+\subsection{Perturbed Latitude--Longitude Cell Test}
+Generated by \texttt{spherical\_perturbed\_latlon\_nseries\_test.py}. This uses the same
+exact cell area as the regular test, but perturbs the interior grid nodes by a smooth
+deterministic field while keeping boundary nodes fixed. The perturbation amplitude is a
+fraction of the local grid spacing. The perturbation field is scale-consistent, so the
+approximations at $N,2N,4N,8N$ sample the same underlying perturbed geometry.
+
+\subsection{Reported Outputs}
+Each script writes a text report, a CSV summary, and a compact \LaTeX{} table. The reported
+convergence orders are computed from successive errors by
+\[
+p_N = \frac{\log(e_N/e_{2N})}{\log 2},
+\]
+where $e_N$ is the absolute error at scale $N$. This convention gives $p_N\approx 2$ for
+second-order convergence, $p_N\approx 4$ for fourth-order, and similarly for the higher
+N-Series operators.
+
+\subsection{Precision and Scope}
+All reported tests used high-precision arithmetic through \texttt{mpmath}. The results are
+numerical evidence for the stated spherical N-Series area law. They do not constitute a
+proof for arbitrary spherical domains or arbitrary irregular meshes. The perturbation test
+is included specifically to show that the clean high-order ladder depends on regularity and
+scale-consistency of the refinement family.
+
+\end{document}

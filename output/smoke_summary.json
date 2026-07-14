@@ -1,0 +1,73 @@
+{
+  "precision_dps": 70,
+  "base_N": 4,
+  "checks": {
+    "moment_conditions_passed": true,
+    "all_results_finite": true,
+    "regular_raw_orders_near_two": true,
+    "regular_two_scale_improves_order": true,
+    "smoke_verification_passed": true
+  },
+  "rows": [
+    {
+      "case": "cap",
+      "N": 4,
+      "raw_order": "1.9524847536297921",
+      "two_order": "4.33833465150704396",
+      "three_order": "5.97361662031420556",
+      "four_order": "10.1274735693387635",
+      "raw_error": "0.268396938855471495",
+      "two_error": "0.00299561595973013418",
+      "three_error": "0.0000417481405880583647",
+      "four_error": "1.22300891415832927e-8"
+    },
+    {
+      "case": "triangle",
+      "N": 4,
+      "raw_order": "1.96165682220666028",
+      "two_order": "3.95341619809879476",
+      "three_order": "5.65279982989133638",
+      "four_order": "10.0293911493050657",
+      "raw_error": "0.0130796843848146926",
+      "two_error": "0.000117428517876996073",
+      "three_error": "2.56905344411450406e-7",
+      "four_error": "1.10954357220632933e-9"
+    },
+    {
+      "case": "latlon",
+      "N": 4,
+      "raw_order": "1.99797286624677154",
+      "two_order": "3.9997682519593775",
+      "three_order": "5.99648813628093559",
+      "four_order": "7.94075104925827636",
+      "raw_error": "0.000785507259361345604",
+      "two_error": "3.68164546144452084e-7",
+      "three_error": "3.94300310498134716e-12",
+      "four_error": "1.52538116814152808e-16"
+    },
+    {
+      "case": "irregular",
+      "N": 4,
+      "raw_order": "1.99722264281641181",
+      "two_order": "3.97112603942746462",
+      "three_order": "5.965420240229286",
+      "four_order": "8.06200939586790812",
+      "raw_error": "0.000706587489089124976",
+      "two_error": "4.53857991454945084e-7",
+      "three_error": "6.11665182847567862e-10",
+      "four_error": "2.35524349096085505e-13"
+    },
+    {
+      "case": "perturbed",
+      "N": 4,
+      "raw_order": "1.99773540334164659",
+      "two_order": "6.26891380462520329",
+      "three_order": "2.2212920655048028",
+      "four_order": "6.19625284405136556",
+      "raw_error": "0.00078597321015985452",
+      "two_error": "4.11570001309180822e-7",
+      "three_error": "2.1744998034914999e-8",
+      "four_error": "4.39205805359348894e-9"
+    }
+  ]
+}

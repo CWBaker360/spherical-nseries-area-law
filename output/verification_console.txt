@@ -1,0 +1,5 @@
+moment_conditions_passed: True
+all_results_finite: True
+regular_raw_orders_near_two: True
+regular_two_scale_improves_order: True
+smoke_verification_passed: True
