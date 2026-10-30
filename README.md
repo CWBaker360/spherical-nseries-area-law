@@ -43,3 +43,8 @@ The compatibility wrappers preserve the historical script names recorded in the 
 ## Rights
 
 Copyright © 2026 C. Wayne Baker. All rights reserved unless otherwise stated.
+
+
+## October 30, 2026 source update (PDF synchronization pending)
+
+The reviewed October 29, 2026 manuscript source (v2.3) is now at [`paper/spherical_nseries_v2_3.tex`](paper/spherical_nseries_v2_3.tex). This versioned source was added without modifying the existing authoritative `paper/` LaTeX/PDF pair. The companion v2.3 PDF has **not yet been uploaded**, so links to the existing PDF still point to the previous version. Do not cite that PDF as v2.3 until the matched PDF is committed.
