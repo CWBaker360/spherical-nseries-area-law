@@ -12,7 +12,16 @@ This repository studies scale cancellation for geometric area approximations on 
 
 while a perturbed-grid experiment marks the boundary of the clean high-order regime.
 
-## Authoritative paper
+
+## Current reviewed manuscript — v2.3 (October 29, 2026)
+
+- [Read v2.3 PDF](paper/spherical_nseries_v2_3.pdf)
+- [LaTeX source v2.3](paper/spherical_nseries_v2_3.tex)
+
+These are the latest reviewed manuscript files. Earlier `paper/spherical_nseries_area_law.*` files are retained for version history. Empirical observations are not proofs of a universal law, and pre-asymptotic fit behavior should not be interpreted as a precision floor.
+
+
+## Earlier manuscript files (retained)
 
 - [`paper/spherical_nseries_area_law.pdf`](paper/spherical_nseries_area_law.pdf)
 - [`paper/spherical_nseries_area_law.tex`](paper/spherical_nseries_area_law.tex)
@@ -44,7 +53,3 @@ The compatibility wrappers preserve the historical script names recorded in the 
 
 Copyright © 2026 C. Wayne Baker. All rights reserved unless otherwise stated.
 
-
-## October 30, 2026 source update (PDF synchronization pending)
-
-The reviewed October 29, 2026 manuscript source (v2.3) is now at [`paper/spherical_nseries_v2_3.tex`](paper/spherical_nseries_v2_3.tex). This versioned source was added without modifying the existing authoritative `paper/` LaTeX/PDF pair. The companion v2.3 PDF has **not yet been uploaded**, so links to the existing PDF still point to the previous version. Do not cite that PDF as v2.3 until the matched PDF is committed.
