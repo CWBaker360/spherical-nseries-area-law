@@ -1,0 +1,602 @@
+% ============================================================
+% A Spherical N-Series Area Law for Regular Refinement Families
+% Version 2.3 release candidate -- October 29, 2026
+%
+% Editorial provenance notes (the unresolved items are retained as limitations):
+%  * Every item that could not be reconstructed from the v2.1 text is
+%    described in visible provenance notes, not represented as verified runs.
+%  * Constants -1/6, -1/90, -1/810 were verified two ways:
+%    (a) direct summation of the weights in Eqs. (2)-(4);
+%    (b) product of Romberg stage factors (4^k 2^{-3}-1)/(4^k-1).
+%  * Numerical content of Tables 1-8 is copied unchanged from v2.1.
+% ============================================================
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+
+
+\newtheorem{proposition}{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}
+
+\newcommand{\Ahat}{\widehat{A}}
+\newcommand{\Aex}{A_{\mathrm{exact}}}
+
+\title{A Spherical N-Series Area Law for Regular Refinement Families\\[2pt]
+\large Analytic regular-family expansions and conditional perturbation law}
+\author{C. Wayne Baker}
+\date{Version 2.3 curated release candidate --- October 29, 2026\\ Original manuscript: June 3, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We study multiscale extrapolation of spherical areas computed from geodesic boundary
+polygons and chordal surface triangulations. The previously reported numerical experiments
+show observed orders close to $2,4,6,8$ for spherical caps, normalized-barycentric spherical
+triangles, latitude--longitude cells, and regular chordal refinements of fixed irregular
+polygons. For spherical caps and uniform latitude--longitude chordal cells away from the poles,
+we justify the even-power asymptotic structure analytically; other reported geometries remain
+numerical examples. The underlying scale weights are the classical Richardson--Romberg weights
+specialized to even error exponents. This revision sharpens the regularity hypothesis and
+analyzes a possible reason that the high-order ladder deteriorates under scale-dependent
+interior-node perturbation. Under an explicit smooth-coefficient expansion, displacements
+proportional to the grid spacing can generate an odd $h^3$ error term that survives the
+even-power extrapolation; we give its exact residual factors ($-1/6$, $-1/90$, $-1/810$ for
+the two-, three- and four-scale operators). We give exact generalized scale weights that can
+instead eliminate a prescribed set of even and odd exponents. The new perturbation mechanism
+is a conditional mathematical explanation, and the exploratory AI-assisted fit diagnostics, which lack complete provenance, are excluded from this version. No general
+even-power theorem for arbitrary spherical meshes is claimed.
+\end{abstract}
+
+%------------------------------------------------------------
+\section{Introduction}
+Many geometric area approximations admit structured error expansions in a refinement
+parameter $h\asymp N^{-1}$. When the errors are in even powers, the same approximation
+evaluated at successive scales can be combined to remove those terms. In the spherical
+cases studied here, the observed sequence is
+\[
+2\longrightarrow 4\longrightarrow 6\longrightarrow 8 .
+\]
+We examine (i) a spherical cap bounded by a regular geodesic polygon, (ii) a chordally
+triangulated birectangular spherical triangle, (iii) a chordally triangulated
+latitude--longitude cell, (iv) fixed irregular spherical polygons under regular chordal-fan
+refinement, and (v) perturbed interior grids. The original tabulated experiments are retained below with explicit provenance limitations.
+New Sections~4 and~9 distinguish geometric nonuniformity from an approximation family whose
+definition changes with the refinement scale.
+
+%------------------------------------------------------------
+\section{Contributions and scope}
+The principal empirical observation is that several geometrically distinct, fixed refinement
+constructions behave as if
+\begin{equation}\label{eq:expansion}
+A_N(D)=A(D)+C_2(D)N^{-2}+C_4(D)N^{-4}+C_6(D)N^{-6}+\cdots .
+\end{equation}
+For families actually possessing this expansion through the required order, extrapolation
+raises the convergence order successively from 2 to 4, 6, and 8. A direct analytic argument
+establishes the even-power structure for the cap construction. The other original experiments
+provide numerical evidence, not a universal proof. Fixed irregular boundaries need not destroy
+the ladder; in contrast, changing a mesh-generating map with $N$ may introduce uncancelled odd
+powers. The operator mechanism itself is classical; the geometric question is which families
+satisfy its asymptotic hypotheses.
+
+%------------------------------------------------------------
+\section{N-Series scale operators}
+Put $h=N^{-1}$, let $TA(h)=A(h/2)$, and set $A_N=A(h)$. If
+$A(h)=A+c_2h^2+c_4h^4+c_6h^6+O(h^8)$, define
+\begin{align}
+\Ahat^{(2)}_N &= \frac{4A_{2N}-A_N}{3}, \label{eq:R2}\\
+\Ahat^{(3)}_N &= \frac{A_N}{45}-\frac{4A_{2N}}{9}+\frac{64A_{4N}}{45}, \label{eq:R3}\\
+\Ahat^{(4)}_N &= -\frac{A_N}{2835}+\frac{4A_{2N}}{135}-\frac{64A_{4N}}{135}+\frac{4096A_{8N}}{2835}. \label{eq:R4}
+\end{align}
+Each set of weights sums to one and eliminates $h^2$ and, respectively, the additional powers
+$h^4$ and $h^6$. Hence, subject to a sufficiently long asymptotic expansion and nonzero next
+coefficient, the errors are of orders 4, 6, and 8. These are Richardson--Romberg extrapolation
+formulas in a geometric N-Series setting.
+
+In terms of the shift $T$ (which commutes with itself and acts on a pure power $h^p$ as
+multiplication by $2^{-p}$), Eqs.~\eqref{eq:R2}--\eqref{eq:R4} are the nested Romberg stages
+\[
+\Ahat^{(r)}=\prod_{k=1}^{r-1}\frac{4^{k}T-I}{4^{k}-1}\,A,\qquad r=2,3,4 .
+\]
+For example, $(16T-I)(4T-I)/45=(64T^2-20T+I)/45$ reproduces Eq.~\eqref{eq:R3}. On an $h^p$
+term, stage $k$ contributes the factor $(4^k2^{-p}-1)/(4^k-1)$, which vanishes exactly when
+$p=2k$. This product form gives the residual moments used in Section~9.
+
+%------------------------------------------------------------
+\section{An accurate regularity statement}
+For a fixed spherical domain $D$ and a specified geometrical area rule, call a refinement
+family \emph{even-asymptotic through order $2r$} when, as $h\downarrow0$ along the admissible
+refinement sequence,
+\begin{equation}\label{eq:evenasym}
+A(h)-A(D)=\sum_{k=1}^{r}c_{2k}h^{2k}+O(h^{2r+2}),
+\end{equation}
+with coefficients independent of the refinement level. Equation~\eqref{eq:evenasym}, rather
+than informal smoothness alone, is the operative hypothesis of the $2,4,6,\dots$ ladder. For a
+given scheme, a fixed sufficiently smooth reparametrization of a reference mesh is a natural
+candidate for a scale-consistent nonuniform family: the map is independent of $h$, while only
+the uniform reference-grid spacing changes. However, being fixed and smooth is not on its own a
+theorem that every area discretization satisfies \eqref{eq:evenasym}. Even-power structure must
+be proved for the particular geometry and area rule or supported by convergence tests. The map
+should also preserve orientation and describe the same target domain at every scale.
+
+%------------------------------------------------------------
+\section{Evidence I: spherical cap area}
+For a cap with polar angle $\alpha$ on the unit sphere, $A_{\mathrm{cap}}=2\pi(1-\cos\alpha)$.
+Join the north pole to adjacent vertices of the regular geodesic boundary polygon. With
+$c=\cos\alpha$, $s=\sin\alpha$, and $h=2\pi/N$, the oriented spherical triangle area for
+sufficiently small $h>0$ is
+\begin{equation}\label{eq:E}
+E_\alpha(h)=2\arctan\!\left(\frac{s^{2}\sin h}{1+2c+c^{2}+s^{2}\cos h}\right).
+\end{equation}
+(This follows from $\tan(E/2)=t\sin h/(1+t\cos h)$ with $t=\tan^2(\alpha/2)=(1-c)/(1+c)$,
+after multiplying numerator and denominator by $(1+c)^2/(1+c)$ and using $1-c^2=s^2$.)
+For $0<\alpha<\pi$ the denominator is positive near zero and even in $h$, while the numerator
+is odd. Therefore $E_\alpha$ is odd analytic near zero:
+\[
+E_\alpha(h)=a_1h+a_3h^3+a_5h^5+\cdots,\qquad a_1=1-\cos\alpha .
+\]
+Since $A_N=NE_\alpha(2\pi/N)$, the polygon area has an even-power error expansion, and its
+constant term $2\pi a_1=2\pi(1-\cos\alpha)$ equals the cap area exactly. This is a proof for
+this cap family, not for every triangulated sphere.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+$\alpha$ & Raw & Two-scale & Three-scale & Four-scale\\
+\midrule
+$15^\circ$ & 1.99989583 & 3.99999065 & 6.00093925 & 7.99993479\\
+$30^\circ$ & 1.99996740 & 4.00041698 & 6.00000053 & 7.95025527\\
+$60^\circ$ & 2.00016296 & 4.00014936 & 6.00003853 & 7.99880645\\
+$75^\circ$ & 2.00023455 & 4.00028432 & 6.00028420 & 8.00026989\\
+\bottomrule
+\end{tabular}
+\caption{Original cap experiment: observed orders formed by comparing $N=128$ with $N=256$ (the row label is the cap polar angle $\alpha$). The $30^\circ$ four-scale value $7.95025527$ is reproduced at 80-digit precision and represents a pre-asymptotic deviation, not a precision floor.}
+\end{table}
+
+%------------------------------------------------------------
+\section{Evidence II: chordal spherical triangle area}
+Take $A=(0,0,1)$, $B=(1,0,0)$, and $C=(\cos\beta,\sin\beta,0)$. This is a birectangular
+spherical triangle: the sides $AB$ and $AC$ are meridians and $BC$ lies on the equator, so the
+angles at $B$ and $C$ are right angles and the angle at the pole $A$ is $\beta$. Its spherical
+excess is $\beta+\pi/2+\pi/2-\pi=\beta$, so $\Aex=\beta$. Map a normalized barycentric
+triangulation to the sphere and sum the Euclidean areas of its chordal triangles.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+$\beta$ & Raw & Two-scale & Three-scale & Four-scale\\
+\midrule
+$15^\circ$ & 1.99942072 & 3.99915618 & 5.99886117 & 7.99716985\\
+$30^\circ$ & 1.99938698 & 3.99908575 & 5.99880136 & 7.99761444\\
+$60^\circ$ & 1.99923969 & 3.99881849 & 5.99858915 & 7.99835976\\
+$90^\circ$ & 1.99885313 & 3.99827889 & 5.99785193 & 7.99808456\\
+\bottomrule
+\end{tabular}
+\caption{Original chordal triangle experiment: observed orders at $N=64$.}
+\end{table}
+
+%------------------------------------------------------------
+\section{Evidence III: latitude--longitude cell area}
+For the unit-sphere cell $\lambda_0\le\lambda\le\lambda_1$ and $\phi_0\le\phi\le\phi_1$, the
+exact area is
+\[
+A_{\mathrm{cell}}=(\lambda_1-\lambda_0)(\sin\phi_1-\sin\phi_0).
+\]
+The original approximation uses a uniform latitude--longitude parameter grid and two Euclidean
+chordal triangles per parameter cell.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Cell & Raw & Two-scale & Three-scale & Four-scale\\
+\midrule
+Equatorial $30^\circ\times30^\circ$ & 1.99996836 & 3.99999637 & 5.99994223 & 7.99911861\\
+Midlatitude $30^\circ\times30^\circ$ & 1.99998486 & 3.99996146 & 5.99998582 & 8.00085300\\
+Wide equatorial $60^\circ\times30^\circ$ & 1.99992674 & 3.99992210 & 6.00000864 & 8.00036842\\
+Northern $15^\circ\times60^\circ$ & 1.99994200 & 3.99996772 & 5.99996443 & 8.00007636\\
+\bottomrule
+\end{tabular}
+\caption{Original latitude--longitude experiment: observed orders at $N=64$.}
+\end{table}
+
+
+\begin{proposition}[Even-power expansion for uniform latitude--longitude chordal cells]
+\label{prop:latlon-even}
+Fix $-\pi/2<\phi_0<\phi_1<\pi/2$ and $\lambda_0<\lambda_1$.
+Subdivide the corresponding unit-sphere parameter rectangle into a uniform
+$N\times N$ grid, with every cell triangulated along its $(p_{00},p_{11})$
+diagonal, and let $A_N$ be the sum of the unsigned Euclidean areas of its two
+chordal triangles. With $h=1/N$, for every positive integer $r$ there are
+coefficients $c_{2},\ldots,c_{2r}$, independent of $N$, such that
+\begin{equation}\label{eq:latlon-even}
+ A_N=(\lambda_1-\lambda_0)(\sin\phi_1-\sin\phi_0)
+       +\sum_{k=1}^{r}c_{2k}h^{2k}+O(h^{2r+2}).
+\end{equation}
+The assertion concerns this fixed rectangular domain and uniform, consistently
+triangulated refinement; it does not extend to arbitrary perturbed grids.
+\end{proposition}
+\begin{proof}
+Put $\Delta\phi=\phi_1-\phi_0$ and $\Delta\lambda=\lambda_1-\lambda_0$.
+A parameter cell has centre $(x,y)$ and corners
+$(x\pm\Delta\phi\,h/2,y\pm\Delta\lambda\,h/2)$.
+For the fixed $p_{00}$--$p_{11}$ diagonal, let $g(x,y,h)$ be the sum of the
+unsigned Euclidean areas of the chordal triangles
+$(p_{00},p_{10},p_{11})$ and $(p_{00},p_{11},p_{01})$.
+Changing the sign of $h$ permutes the opposite corners; taken together, the
+two unsigned triangle areas are invariant under this relabelling. Their sum therefore satisfies
+$g(x,y,-h)=g(x,y,h)$ for real $h$ sufficiently close to zero.
+Each triangle has area one half of the norm of a cross product of edge
+vectors analytic in $h$. After factoring $h^2$, each squared norm has a
+positive leading coefficient proportional to
+$(\Delta\phi\,\Delta\lambda\cos x)^2$; hence its positive square root
+is real analytic for small signed $h$, uniformly on the closed latitude band. Thus $g/h^2$ extends to an even real-analytic
+function of $h$, uniformly with respect to $(x,y)$ on the fixed rectangle.
+In particular, for any fixed $r$,
+\[
+ g(x,y,h)=\sum_{k=1}^{r+1}\rho_{2k}(x,y)h^{2k}
+                +O(h^{2r+4}),\qquad
+ \rho_2(x,y)=\Delta\phi\,\Delta\lambda\cos x,
+\]
+with a uniform remainder. Rotational invariance makes the coefficient
+functions independent of longitude $y$, although this is not required for
+the midpoint argument.
+Summing the remainder over $N^2=h^{-2}$ cells gives
+$O(h^{2r+2})$. For each coefficient, the cell-centre sum is a composite
+midpoint quadrature on a fixed rectangle, and the Euler--Maclaurin formula
+for smooth coefficient functions has an expansion in even powers of $h$.
+Collecting terms yields \eqref{eq:latlon-even}. The leading midpoint integral
+is
+\[
+ \int_{\phi_0}^{\phi_1}\int_{\lambda_0}^{\lambda_1}
+            \cos\phi\,d\lambda\,d\phi
+ = (\lambda_1-\lambda_0)(\sin\phi_1-\sin\phi_0).
+\]
+\end{proof}
+
+\begin{remark}[Scope of the parity argument]
+The midpoint nodes and the fixed diagonal are part of the definition of the
+refinement family. The assertion is an asymptotic expansion to each finite
+order, not a claim that an infinite series converges. In particular it does
+not cover the scale-dependent interior-node perturbation in Section~9.
+\end{remark}
+
+%------------------------------------------------------------
+\section{Evidence IV: irregular spherical polygon domains}
+The original study considered fixed irregular convex spherical polygons triangulated from a
+root vertex. Each fan triangle was refined using a normalized barycentric chordal patch. One
+six-vertex example had angular vertices $(4^\circ,-8^\circ)$, $(18^\circ,5^\circ)$,
+$(15^\circ,28^\circ)$, $(2^\circ,42^\circ)$, $(-14^\circ,30^\circ)$, and $(-10^\circ,4^\circ)$;
+the reported reference area by spherical excess was
+$0.325062777898240815426301649532$. The main inference is empirical: an irregular but fixed
+domain boundary does not automatically prevent a clean ladder. It is important that the fan
+geometry remains well posed, consistently oriented, and convergent to the intended spherical
+region.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrr}
+\toprule
+$N$ & Raw & Two-scale & Three-scale & Four-scale\\
+\midrule
+16 & 1.99929248 & 3.99269841 & 5.99184034 & 8.01301620\\
+32 & 1.99982228 & 3.99817005 & 5.99798552 & 8.00310155\\
+64 & 1.99995552 & 3.99954224 & 5.99949790 & 8.00076594\\
+\bottomrule
+\end{tabular}
+\caption{Original fixed six-vertex polygon experiment.}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrr}
+\toprule
+Vertices & Raw & Two-scale & Three-scale & Four-scale\\
+\midrule
+5 & 1.99993053 & 3.99981653 & 5.99991832 & 7.99955672\\
+6 & 1.99993586 & 3.99979158 & 5.99991390 & 8.00029966\\
+8 & 2.00001032 & 4.00140962 & 5.99925770 & 7.99912295\\
+\bottomrule
+\end{tabular}
+\caption{Original aggregate final-level orders over deterministic polygon families and seeds.}
+\end{table}
+
+%------------------------------------------------------------
+\section{Evidence V: perturbations and a testable mechanism}
+In the original perturbation experiment, boundary nodes of a latitude--longitude cell remained
+fixed, while interior nodes were displaced by a deterministic smooth field. Perturbation
+amplitude was specified as a fraction of local grid spacing; three seeds were used at each
+level.
+Because the amplitude is a fraction of the local spacing, this experiment belongs to the
+scale-dependent family discussed in Section~9.1, not to the fixed-map family of Section~4.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Relative perturbation & Raw & Two-scale & Three-scale & Four-scale\\
+\midrule
+0.00 & 1.99996836 & 3.99999637 & 5.99994223 & 7.99911861\\
+0.02 & 1.99997529 & 4.02004815 & 4.53899093 & 2.61899119\\
+0.05 & 2.00001207 & 3.44420303 & 5.68235637 & 2.77050496\\
+0.10 & 2.00014360 & 3.89815337 & 8.94059560 & 3.59334301\\
+0.20 & 2.00066838 & 3.90830154 & 6.15480240 & 4.36890149\\
+\bottomrule
+\end{tabular}
+\caption{Original perturbed-grid measurements (Table~6 of the June 2026 manuscript):
+aggregate final-level mean observed orders. These are diagnostics, not verified asymptotic
+exponents.}
+\end{table}
+
+An apparent order such as $8.94059560$ is not evidence of asymptotic convergence above the
+theoretical order: accidental coefficient cancellation, small denominators in measured error
+ratios, sign changes, or numerical floors can distort finite-level slopes. The original data
+establish only that the second-order raw behavior is comparatively robust and that
+higher-order extrapolation is not uniform in this test window.
+
+\paragraph{Qualitative reading of Table~6.}
+At small perturbation the two-scale order stays near 4 (0.02: 4.02) while the three- and
+four-scale orders fall well below their nominal 6 and 8, with four-scale values between about
+2.6 and 4.4. This is qualitatively what a residual $h^3$ term would produce: the higher-order
+operators remove the $h^4,h^6$ terms that otherwise mask it, and the residual factors of
+Proposition~\ref{prop:cubic} below (e.g.\ $-1/6$ versus $-1/810$) are applied to a coefficient that is linear
+in the amplitude. This is compatibility, not confirmation. The non-monotone entries, the
+erratic three-scale values, and the demonstrable pre-asymptotic variation in the unperturbed
+four-scale baseline (cf.\ Table~1, $30^\circ$) mean that the table cannot by itself separate a
+cubic residual from finite-window or round-off effects.
+
+
+%------------------------------------------------------------
+\subsection{Conditional appearance of a cubic term}
+The key distinction is between a fixed nonuniform parametrization and a parametrization whose
+displacement amplitude changes with $h$. Suppose $A(h,\delta)$ is an approximation defined
+using a perturbation parameter $\delta$, and the following smooth, uniform in $\delta$
+even-power expansion holds near $(h,\delta)=(0,0)$:
+\begin{equation}\label{eq:joint}
+A(h,\delta)-A=C_2(\delta)h^2+C_4(\delta)h^4+O(h^6),
+\end{equation}
+where $C_2$ is three times continuously differentiable (or has a locally Lipschitz second
+derivative) and $C_4$ is at least once continuously differentiable near zero. This is a
+hypothesis for a particular numerical construction, not something automatically implied by
+smooth mesh perturbations.
+
+\begin{proposition}[Scale-dependent perturbations can create odd powers]\label{prop:cubic}
+Assume \eqref{eq:joint} with a remainder uniform for $|\delta|\le\delta_0$ and set
+$\delta=\varepsilon h$, with fixed $\varepsilon$. Then
+\begin{equation}\label{eq:cubic}
+A(h,\varepsilon h)-A=C_2(0)h^2+\varepsilon C_2'(0)h^3
++\Big[\tfrac12\varepsilon^2C_2''(0)+C_4(0)\Big]h^4+O(h^5).
+\end{equation}
+If $\varepsilon C_2'(0)\neq0$, then the two-, three- and four-scale even-power operators
+\eqref{eq:R2}--\eqref{eq:R4} each leave a cubic residual
+\[
+-\tfrac16\,\varepsilon C_2'(0)\,h^3,\qquad
+-\tfrac1{90}\,\varepsilon C_2'(0)\,h^3,\qquad
+-\tfrac1{810}\,\varepsilon C_2'(0)\,h^3,
+\]
+respectively, so the extrapolated error is $O(h^3)$ and is not improved beyond third order by
+adding scales.
+\end{proposition}
+
+\begin{proof}
+Taylor-expand $C_2(\varepsilon h)$ and $C_4(\varepsilon h)$ in \eqref{eq:joint}; the $h^3$
+coefficient is $\varepsilon C_2'(0)$. For a scale-doubling weight set $\{w_j\}$ the surviving
+coefficient is $\varepsilon C_2'(0)\sum_jw_j2^{-3j}$. Direct summation gives
+\begin{align*}
+\text{(2)}&:\ -\tfrac13+\tfrac43\cdot\tfrac18=-\tfrac16,\\
+\text{(3)}&:\ \tfrac1{45}-\tfrac49\cdot\tfrac18+\tfrac{64}{45}\cdot\tfrac1{64}=-\tfrac1{90},\\
+\text{(4)}&:\ -\tfrac1{2835}+\tfrac4{135}\cdot\tfrac18-\tfrac{64}{135}\cdot\tfrac1{64}
++\tfrac{4096}{2835}\cdot\tfrac1{512}=-\tfrac1{810}.
+\end{align*}
+Equivalently, by the product form in Section~3 the stage factors at $p=3$ are $-\tfrac16$, $\tfrac1{15}$,
+$\tfrac19$, whose cumulative products are $-\tfrac16,-\tfrac1{90},-\tfrac1{810}$.
+\end{proof}
+
+\begin{remark}
+The notation $A(h,\varepsilon h)$ alone does not establish the existence of a cubic error
+term. It might vanish if $C_2'(0)=0$, if symmetry forces cancellations, or if a different
+mesh/area discretization fails the joint expansion assumption. Moreover, a fixed physical
+displacement $\delta$ and an $h$-scaled displacement define different refinement families; only
+comparisons made with identical geometric rules and numerical precision isolate this effect.
+\end{remark}
+
+\subsection{Scope of the numerical comparison}
+The previously reported numerical comparison of fixed-map and scale-dependent
+perturbations has not been independently reproduced from the original
+implementation and is omitted from this release. The conditional
+Proposition~\ref{prop:cubic} is an algebraic implication of its stated joint
+expansion hypothesis, not a validation of a particular perturbation code.
+
+\section{Generalized N-Series operators for known error exponents}
+Suppose the approximation has an expansion
+\[
+A(h)=A+\sum_{p\in P}c_ph^p+\text{higher-order terms},
+\]
+where $P=\{p_1,\dots,p_m\}$ is a prescribed set of distinct positive exponents. Using $m+1$
+refinement levels $h,h/2,\dots,h/2^m$, seek
+\begin{equation}\label{eq:gen}
+\Ahat(h)=\sum_{j=0}^{m}w_jA(h/2^j),\qquad
+\sum_{j=0}^{m}w_j=1,\qquad
+\sum_{j=0}^{m}w_j2^{-jp_k}=0\quad(k=1,\dots,m).
+\end{equation}
+The associated Vandermonde system has a unique solution for distinct exponents. If
+$P=\{2,3\}$, the three-scale weights are
+\begin{equation}\label{eq:P23}
+\Ahat^{\{2,3\}}(h)=\frac{A(h)}{21}-\frac{4A(h/2)}{7}+\frac{32A(h/4)}{21}.
+\end{equation}
+For $P=\{2,3,4\}$ the four-scale formula is
+\begin{equation}\label{eq:P234}
+\Ahat^{\{2,3,4\}}(h)=-\frac{A(h)}{315}+\frac{4A(h/2)}{45}-\frac{32A(h/4)}{45}+\frac{512A(h/8)}{315}.
+\end{equation}
+For $P=\{2,3,4,5\}$ the five-scale formula is
+\begin{equation}\label{eq:P2345}
+\Ahat^{\{2,3,4,5\}}(h)=\frac{A(h)}{9765}-\frac{4A(h/2)}{651}+\frac{32A(h/4)}{279}
+-\frac{512A(h/8)}{651}+\frac{16384A(h/16)}{9765}.
+\end{equation}
+For a term $c_ph^p$ the residual coefficient is multiplied by the exact moment
+$M_p=\sum_{j=0}^{m}w_j2^{-jp}$. Direct rational evaluation gives
+\begin{equation}\label{eq:moments}
+M^{\{2,3\}}_4=\frac1{56},\qquad M^{\{2,3,4\}}_5=-\frac1{960},\qquad M^{\{2,3,4,5\}}_6=\frac1{31744}.
+\end{equation}
+Thus, when the indicated next coefficient is nonzero and a sufficiently long expansion holds,
+the three formulas have leading residuals $c_4h^4/56$, $-c_5h^5/960$, and $c_6h^6/31744$,
+respectively, and leading orders 4, 5, and 6. The sums of absolute weights are approximately
+2.143, 2.429, and 2.585, respectively: these give modest worst-case amplification factors for
+independent bounded input errors, although severe cancellation can still demand high working
+precision. They require more refinement levels than the even-only operators to reach a
+comparable order, and do not guarantee improved wall-clock efficiency. Numerical conditioning
+and computational cost should be measured rather than presumed.
+
+%------------------------------------------------------------
+\section{Boundary irregularity, mesh family, and geometric validity}
+The original polygon tests separated fixed irregular boundaries from changes in the mesh rule.
+In a further boundary stress sweep, five-vertex cases at radii $15^\circ$ and $30^\circ$ with
+jitter 0.2 and 0.5, and eight-vertex cases at jitter 0.2, retained near-$2,4,6,8$ behavior.
+Eight-vertex jitter-0.5 cases did not converge to the same reference area, with raw errors
+nearly constant and observed orders near zero. Such cases suggest a geometry/fan mismatch
+(possibly orientation, nonconvexity, overlap, or a different limiting region), not a failure of
+Richardson cancellation for an otherwise valid asymptotic expansion. For all test families, the
+domain, orientation, target area, and approximation rule must be specified unambiguously.
+
+%------------------------------------------------------------
+\section{Limitations and validation priorities}
+The retained original results are numerical except for the analytic cap parity argument,
+the uniform latitude--longitude result in Proposition~\ref{prop:latlon-even}, and the
+algebraic extrapolation identities. The original tests use convex or otherwise well-behaved
+spherical domains with available reference areas. Arbitrary nonconvex, self-intersecting,
+adaptive, and highly irregular meshes are outside the established scope. Proposition~\ref{prop:cubic} is
+conditional: no joint expansion theorem for the original perturbed triangulation is proved
+here. The numerical anomalies of the original perturbed-grid Table~6 are \emph{not} resolved by this revision;
+the cubic mechanism is a candidate explanation only. Supplementary AI-assisted diagnostic fit tables requiring missing node and precision metadata are omitted from this release. To
+elevate the proposed mechanism to a numerical result for this paper, one should (i) test
+fixed-map and $h$-dependent-map meshes with the same node field, (ii) retain boundary
+constraints and triangle orientation checks, (iii) sweep several $N$ and deformation
+amplitudes, (iv) fit the $h^3$ coefficient directly, (v) verify precision stability, and
+(vi) compare both error-versus-cost and observed-order-versus-cost across even-only and
+mixed-power operators.
+
+\subsection{Falsifiable cubic-coefficient test}
+A sharper test of Proposition~\ref{prop:cubic} is the amplitude law, not merely a measured convergence order.
+Choose a single smooth, boundary-vanishing perturbation vector field $V$ and a fixed chordal
+triangulation convention. Here $h=N^{-1}$ in normalized cell coordinates (equivalently,
+$h=H/N$ with $H=1$); $\delta=\varepsilon/N$ is the dimensionless displacement amplitude
+multiplying $V$. At signed amplitude $\varepsilon$, displace interior parameter-grid nodes by
+$\delta V$; retain the same physical domain and check triangle orientation. With
+$e(h,\varepsilon)=A(h,\varepsilon h)-A$, fit, over several successively refined grids and at
+sufficiently high precision,
+\begin{equation}\label{eq:fit}
+e(h,\varepsilon)=b_2(\varepsilon)h^2+b_3(\varepsilon)h^3+b_4(\varepsilon)h^4+\cdots .
+\end{equation}
+Under the joint expansion \eqref{eq:joint}, the precise small-amplitude prediction is
+$b_3(\varepsilon)=\varepsilon C_2'(0)$, including $b_3(0)=0$; a nonzero slope requires
+$C_2'(0)\neq0$. Test symmetric amplitudes $0,\pm\varepsilon_1,\pm\varepsilon_2$ with at least
+two distinct nonzero magnitudes. Check that $[b_3(\varepsilon)-b_3(-\varepsilon)]/(2\varepsilon)$
+stabilizes to one value, while the even-in-$\varepsilon$ part of $b_3$ tends to zero; compare the
+inferred slope across refinement windows and increased precision.
+
+By Proposition~\ref{prop:cubic}, the predicted cubic coefficients of the extrapolated errors are
+\[
+-\tfrac16\,\varepsilon C_2'(0)\ \ (\text{two-scale}),\qquad
+-\tfrac1{90}\,\varepsilon C_2'(0)\ \ (\text{three-scale}),\qquad
+-\tfrac1{810}\,\varepsilon C_2'(0)\ \ (\text{four-scale}).
+\]
+These coefficients are conditional predictions, not fitted measurements. A numerical test must distinguish failure of the joint expansion, vanishing derivatives, and pre-asymptotic effects; observed convergence orders alone cannot prove the hypothesis.
+
+\section{Relation to the general N-Series framework}
+Spherical area supplies another setting in which geometrically defined approximants can exhibit
+extrapolatable error modes. This contribution extends the range of examples, not the
+mathematical novelty of Richardson--Romberg weighting. In particular, a provable parity or
+error-expansion theorem for a specified mesh/area rule is more informative than an isolated
+high observed-order ratio.
+
+%------------------------------------------------------------
+\section{Conclusion}
+For several fixed spherical refinement families, the reported experiments show the
+$2,4,6,8$ error-order ladder, while for spherical caps and uniform latitude--longitude chordal cells (away from the poles)
+the even-power structure follows analytically from the corresponding geometric symmetries. The perturbation results motivate a more
+exact distinction: an irregular mesh may still be scale-consistent, while a scale-dependent
+deformation can cause the expansion coefficients to vary with $h$ and generate odd powers. The
+resulting third-order obstruction, when its coefficient is nonzero, is consistent with, and
+would account for, the stalling of even-power cancellation in the perturbed experiments; its
+residual factors are $-1/6$, $-1/90$ and $-1/810$ for the two-, three- and four-scale operators.
+The numerical anomalies of Table~6 are not shown by this paper to be fully resolved. If the
+error exponents are identified, generalized multiscale cancellation is available. The precise
+analytical hypotheses and independent numerical verification remain central to any broader
+spherical area law.
+
+%------------------------------------------------------------
+\appendix
+\section{Reproducibility notes for the original experiments}
+The original June 2026 manuscript identifies the following standalone Python scripts (names only; this TeX/PDF release does not include their executable contents):
+\begin{itemize}
+\item \texttt{spherical\_area\_nseries\_cap\_test.py}
+\item \texttt{spherical\_triangle\_nseries\_area\_test.py}
+\item \texttt{spherical\_latlon\_cell\_nseries\_area\_test.py}
+\item \texttt{spherical\_irregular\_polygon\_nseries\_test.py}
+\item \texttt{spherical\_irregular\_polygon\_batch\_nseries\_test.py}
+\item \texttt{spherical\_irregular\_polygon\_stress\_sweep\_nseries\_test.py}
+\item \texttt{spherical\_perturbed\_latlon\_nseries\_test.py}
+\end{itemize}
+For errors $e_N=|A_N-\Aex|$, the observed order is $p_N=\log(e_N/e_{2N})/\log2$; the
+corresponding definition applies to the extrapolated errors. Some original experiment scripts were not included in the source/PDF review package, and their archived execution status is not established here. Numerical tables are attributed to the original manuscript; this statement is not a reproducibility certification.
+
+\section{Revision history and provenance}
+\textbf{Version 1 (June 3, 2026):} five spherical area tests, tables of observed orders, cap
+parity argument, classical even-power scale operators, and limitations.
+
+\textbf{Version 2 (October 24, 2026):} precise expansion-based regularity definition;
+conditional $h^3$ perturbation proposition; AI-assisted exploratory diagnostics, distinctly
+labeled; generalized mixed-power operators; stronger limits on what numerical observations
+establish. The original numerical values are preserved rather than silently replaced.
+
+\textbf{Version 2.1 (October 24, 2026):} corrected the regularity needed for the $O(h^5)$
+remainder; clarified provenance as exploratory AI-assisted review; added first surviving exact
+moments, error amplification factors, and a falsifiable signed-amplitude test of
+cubic-coefficient linearity.
+
+\textbf{Review supplement (October 24, 2026):} added specified deformation fields,
+amplitude-fit sensitivity and provenance distinctions, plus an AI-assistance disclosure. The
+original Section~9 perturbation remains unverified.
+
+\textbf{Version 2.2 (October 25, 2026):} (1) stated the exact cubic residual factors
+$-1/6$, $-1/90$, $-1/810$ in Proposition~1 (now Proposition~\ref{prop:cubic}) and Section~12.1, with a product-of-stages form of
+the operators in Section~3; (2) Eq.~(6) numerator written as $s^2\sin h$ with a one-line
+derivation; (3) removed the redundant condition $c\neq-1$ and noted that the constant term
+$2\pi a_1$ equals the cap area; (4) the Section~6 triangle is described as birectangular, with
+the reason the area equals $\beta$; (5) Section~9 and the Conclusion now describe the cubic
+mechanism as consistent with, not established by, Table~6, and request a definition of what the
+three seeds vary; (6) supplementary fit data with incomplete node, precision, and noise-floor provenance are omitted from this curated release;
+(7) the shift operator $T$ is now used (product form of the operators in Section~3, unnumbered so that equation numbers match v2.1); (8) this entry. No numerical table values
+were changed. Those historical fit-provenance issues are not part of the current results.
+
+\textbf{Version 2.3 release candidate (October 29, 2026):} added
+Proposition~\ref{prop:latlon-even}, an even-power asymptotic expansion for uniform
+latitude--longitude chordal triangulations strictly between the poles. The
+proof uses local diagonal parity, a uniform analytic area expansion, and
+midpoint Euler--Maclaurin summation. Updated the abstract, scope and conclusion
+without changing the original numerical tables or removing outstanding
+provenance qualifications. The source/PDF pair is synchronized; supplementary numerical provenance limitations remain expressly disclosed.
+
+%------------------------------------------------------------
+\begin{thebibliography}{9}
+\bibitem{coxeter} H. S. M. Coxeter, \emph{Introduction to Geometry}, Wiley, 1969.
+\bibitem{todhunter} I. Todhunter, \emph{Spherical Trigonometry}, Macmillan, 1886.
+\bibitem{richardson} L. F. Richardson, ``The approximate arithmetical solution by finite
+differences of physical problems,'' \emph{Philosophical Transactions of the Royal Society A},
+vol.~210, 1911, pp.~307--357.
+\bibitem{williamson} D. L. Williamson, ``The Evolution of Dynamical Cores for Global
+Atmospheric Models,'' \emph{Journal of the Meteorological Society of Japan}, vol.~85B, 2007,
+pp.~241--269.
+\end{thebibliography}
+
+\end{document}
+
+% Curated release: unsupported AI-assisted fit sections omitted, original experimental provenance remains qualified.
