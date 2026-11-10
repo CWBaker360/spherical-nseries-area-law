@@ -1,0 +1,81 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{remark}{Remark}
+\title{A Uniform Joint Expansion for Smoothly Deformed Chordal Surface Grids\\\large Proposed proof supplement for Spherical N-Series v2.4}
+\author{Technical draft for independent verification}
+\date{November 10, 2026}
+\begin{document}\maketitle
+\noindent\textbf{Status.} This is a proposed analytic proof, not an independently refereed result. It establishes the joint expansion under the stated smoothness and nondegeneracy hypotheses; it does not analytically certify that the particular numerical field has $C_2'(0)\ne0$, and does not establish historical novelty.
+
+\begin{theorem}[Parameter-uniform even-power area expansion]\label{thm:uniform}
+Let $\Omega=[0,1]^2$ and let $X$ be a $C^\infty$ map defined on a neighbourhood of $\Omega$ with values in $\mathbb R^3$ such that $X_s\times X_t\ne0$ on $\Omega$. Let $V\in C^\infty(\Omega;\mathbb R^2)$ vanish on $\partial\Omega$, with a smooth extension to a neighbourhood of $\Omega$. For sufficiently small $\delta_0>0$, put
+\[
+\psi_\delta(x)=x+\delta V(x),\qquad F_\delta=X\circ\psi_\delta,\qquad |\delta|\le\delta_0.
+\]
+For positive integers $N$, set $h=N^{-1}$, sample $F_\delta$ on the regular $(N+1)\times(N+1)$ parameter grid, split each parameter square along its lower-left--upper-right diagonal, and let $A(h,\delta)$ be the sum of the unsigned Euclidean areas of the two mapped planar triangles in every square. Let
+\[
+A=\int_\Omega\|X_s\times X_t\|\,ds\,dt.
+\]
+Then for every integer $r\ge1$ there are $C^\infty$ functions $C_2,\ldots,C_{2r}$ on $[-\delta_0,\delta_0]$ and a constant $M_r$, independent of $N$ and $\delta$, such that
+\[
+\sup_{|\delta|\le\delta_0}\left|A(h,\delta)-A-\sum_{k=1}^{r}C_{2k}(\delta)h^{2k}\right|\le M_r h^{2r+2}
+\]
+for all sufficiently large $N$. In particular, Equation (7) of the v2.4 draft holds uniformly in $\delta$, with smooth $C_2,C_4$.
+\end{theorem}
+\begin{proof}
+\textbf{1. A uniform family of regular maps.} Choose $\delta_0$ so small that $|\delta|\|DV\|_\infty<1/2$. Then $\psi_\delta$ is injective by the Lipschitz estimate
+$\|\psi_\delta(x)-\psi_\delta(y)\|\ge (1-|\delta|\|DV\|_\infty)\|x-y\|$. Its Jacobian has positive determinant, and since $V=0$ on $\partial\Omega$, the map is a diffeomorphism of $\Omega$ onto itself (e.g. by invariance of domain and the fixed boundary). The family $F_\delta$ is jointly smooth in $(x,\delta)$, with derivatives of every fixed order bounded on the compact set $\Omega\times[-\delta_0,\delta_0]$. Moreover $\|(F_\delta)_s\times(F_\delta)_t\|$ has a strictly positive lower bound, uniform in $\delta$. Its surface integral is $A$, independent of $\delta$, by the change-of-variables formula.
+
+\textbf{2. A paired cell has an even local expansion.} Let $x=(s,t)$ be a cell centre and $F=F_\delta$. Define the four corners
+\[
+p_{ab}(x,h)=F\bigl(x+((2a-1)h/2,(2b-1)h/2)\bigr),\quad a,b\in\{0,1\},
+\]
+where the first index is the $s$ coordinate. Let
+\[
+G(x,h,\delta)=\tfrac12\|(p_{10}-p_{00})\times(p_{11}-p_{00})\|
++\tfrac12\|(p_{11}-p_{00})\times(p_{01}-p_{00})\|.
+\]
+Both cross products are $h^2$ times a jointly smooth vector function, including at $h=0$, whose leading value is (up to orientation) $F_s\times F_t$. Uniform regularity makes their normalized squared norms uniformly positive near $h=0$. Their positive square roots therefore define jointly smooth functions, with bounds on every fixed derivative, uniformly for $x\in\Omega$ and $|\delta|\le\delta_0$ (using the smooth extension where a shifted corner lies just outside $\Omega$).
+Under $h\mapsto-h$, the corners interchange $p_{00}\leftrightarrow p_{11}$ and $p_{10}\leftrightarrow p_{01}$, exchanging the two \emph{unoriented} triangles and leaving their combined area invariant. Thus $G(x,-h,\delta)=G(x,h,\delta)$. Joint Taylor expansion, with uniform remainder, yields for any $r\ge1$
+\[
+G(x,h,\delta)=h^2\left(q_0(x,\delta)+q_2(x,\delta)h^2+\cdots+q_{2r}(x,\delta)h^{2r}+O_{\rm unif}(h^{2r+2})\right),
+\]
+where all $q_{2k}$ are jointly $C^\infty$, and $q_0=\|F_s\times F_t\|$.
+
+\textbf{3. Uniform midpoint summation.} The global sum is
+\[
+A(h,\delta)=h^2\sum_{i,j=0}^{N-1}\left[q_0(x_{ij},\delta)+h^2q_2(x_{ij},\delta)+\cdots+h^{2r}q_{2r}(x_{ij},\delta)\right]+O_{\rm unif}(h^{2r+2}),
+\]
+where $x_{ij}=((i+1/2)h,(j+1/2)h)$; the stated remainder follows because there are $N^2$ cells. For a jointly smooth family $q(x,\delta)$, applying the one-dimensional midpoint Euler--Maclaurin expansion successively in $s$ and $t$ gives, to every fixed order $2r$,
+\[
+h^2\sum_{i,j=0}^{N-1}q(x_{ij},\delta)
+=\sum_{\ell=0}^{r}h^{2\ell}\mathcal B_{2\ell}[q(\cdot,\delta)]+O_{\rm unif}(h^{2r+2}),\quad \mathcal B_0[q]=\int_\Omega q.
+\]
+Here $\mathcal B_{2\ell}$ are fixed linear boundary/integral functionals of spatial derivatives. Their coefficient dependence on $\delta$ is smooth. The remainder is uniform because the necessary spatial derivatives are uniformly bounded over the compact parameter interval; the same argument applies after any fixed number of $\delta$ derivatives.
+Collecting powers of $h$ gives smooth coefficients $C_{2k}(\delta)$ and the uniform remainder. The constant term is $\mathcal B_0[q_0]=\int_\Omega\|(F_\delta)_s\times(F_\delta)_t\|=A$. This proves the theorem.
+\end{proof}
+
+\begin{corollary}[Cubic obstruction for grid-spacing-dependent deformation]\label{cor:cubic}
+Under Theorem~\ref{thm:uniform}, fix $\varepsilon\in\mathbb R$ and set $\delta=\varepsilon h$. Then
+\[
+A(h,\varepsilon h)-A=C_2(0)h^2+\varepsilon C_2'(0)h^3+
+\left(\tfrac12\varepsilon^2C_2''(0)+C_4(0)\right)h^4+O(h^5).
+\]
+The error left by the standard two-, three-, and four-scale even-power Richardson operators has cubic coefficients respectively
+\[
+-\tfrac16\varepsilon C_2'(0),\qquad -\tfrac1{90}\varepsilon C_2'(0),\qquad-\tfrac1{810}\varepsilon C_2'(0).
+\]
+If $\varepsilon C_2'(0)\ne0$, all three errors have \emph{exact} asymptotic order three. If this coefficient vanishes, the conclusion of third-order stalling does not follow.
+\end{corollary}
+\begin{proof}
+The expansion follows from Theorem~\ref{thm:uniform} with $r=2$, Taylor expansion of $C_2$ through second order and $C_4$ through first order, and uniformity of the remainder for $\delta=\varepsilon h$. Each Richardson operator multiplies $h^p$ by $\sum_jw_j2^{-jp}$. For $p=3$, the factors are the stated exact rational numbers.
+\end{proof}
+
+\begin{remark}[Exact scope of closure]
+The uniform expansion and coefficient differentiability are proved for the stated $C^\infty$ fixed-field family, including the analytic latitude--longitude map on a closed band strictly away from the poles and the smooth vector field specified in v2.4. The \emph{nonvanishing} of $C_2'(0)$ for that specific field is currently indicated by numerical experiments; to claim an unconditional observed third-order stall for that particular field, an analytic nonvanishing calculation or a validated interval enclosure is still needed. Arbitrary unrelated node jitter and topology-changing/adaptive triangulations are not covered.
+\end{remark}
+\end{document}

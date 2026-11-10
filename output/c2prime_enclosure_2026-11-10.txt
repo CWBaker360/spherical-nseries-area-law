@@ -1,0 +1,7 @@
+guard: d|N|/d delta - div(J V) at (0.3,0.6): -8.9683e-42
+guard: q2 formula - direct paired-cell value at (0.3,0.6): undeformed -2.1e-18, deformed (delta=0.03) -4.15e-14   [q2 ~ -0.0150607]
+guard: q2 formula - direct paired-cell value at (0.8,0.15): undeformed -2.0e-18, deformed (delta=0.03) -3.82e-14   [q2 ~ -0.0128183]
+
+C2(0)  enclosure: [-0.01189423662103184634603051 +/- 8.45e-27]    (grid-sum value -0.011894236621)
+C2'(0) enclosure: [-0.000680779112122198 +/- 1.96e-19]
+C2'(0) < 0 certified: True    |C2'(0)| lower bound: [0.000680779112122 +/- 1.98e-16]
