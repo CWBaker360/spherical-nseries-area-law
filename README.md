@@ -53,3 +53,15 @@ The compatibility wrappers preserve the historical script names recorded in the 
 
 Copyright © 2026 C. Wayne Baker. All rights reserved unless otherwise stated.
 
+
+## Lean 4 formal verification
+
+The regular-patch fourth-order spherical area expansion
+and its two-scale Richardson corollary have been verified
+in Lean 4: 31 modules, 126 audited declarations, zero
+reported compiler errors or sorryAx dependencies.
+
+The formalization does not cover the deformation-uniform,
+all-orders theorem or coordinate-singular polar regions.
+
+[Verification archive and reproducibility record](lean-verification/theorem2-regular-patch-2026-11-11/REPRODUCIBILITY.md)
