@@ -68,7 +68,8 @@ jobs:
                   print(result.stdout, flush=True)
                   if result.returncode or re.search(r'\bsorryAx\b|declaration uses .sorry.', result.stdout):
                       raise SystemExit(f'Compilation or admitted-proof failure: {name}')
-                  expected = audit((root / (name + '-release-build.txt')).read_text(encoding='utf-8-sig'))
+                  raw = (root / (name + '-release-build.txt')).read_bytes()
+                  expected = audit(raw.decode('utf-16' if raw.startswith((bytes([255,254]), bytes([254,255]))) else 'utf-8-sig'))
                   actual = audit(result.stdout)
                   if actual != expected:
                       raise SystemExit(f'Audit mismatch in {name}: missing={expected-actual}, extra={actual-expected}')
