@@ -49,6 +49,25 @@ python scripts/spherical_nseries_area_suite.py --case smoke --N 4 --dps 70 --out
 
 The compatibility wrappers preserve the historical script names recorded in the manuscript.
 
+## Supplementary Lean 4 verification — November 24, 2026
+
+Independent Linux verification successfully reproduced all 31 Lean modules, 126 declaration axiom audits and 65 archived file checksums.
+
+Both principal theorems passed:
+- `BakerSpherical.AreaLaw.spherical_area_law`
+- `BakerSpherical.AreaLaw.richardson_fourth_order`
+
+Standard axioms only: `propext`, `Classical.choice`, and `Quot.sound`. No `sorryAx` dependencies.
+
+Environment: Lean v4.36.0-rc2; Mathlib revision ccd6c8476363fc81f2e4bee2eeb1a62c99338549.
+
+The verification covers the fixed regular-patch fourth-order area law and Richardson cancellation under the stated smoothness and nondegeneracy assumptions. Universal even-power convergence, sixth- and eighth-order convergence, and arbitrary mesh deformation remain outside its scope.
+
+- [Lean verification archive](https://github.com/CWBaker360/spherical-nseries-area-law/tree/42dbeed373302498cd1b4d8c189fafb44bd316ac/lean-verification/theorem2-regular-patch-2026-11-11)
+- [Successful automated verification](https://github.com/CWBaker360/spherical-nseries-area-law/actions/runs/45423440967)
+
+The published v2.3 manuscript and original numerical archive remain unchanged.
+
 ## Rights
 
 Copyright © 2026 C. Wayne Baker. All rights reserved unless otherwise stated.
