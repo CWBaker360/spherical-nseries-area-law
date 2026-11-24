@@ -1,0 +1,92 @@
+name: Spherical Lean verification
+on:
+  push:
+    branches: [v2.4-draft]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: lean-verification/theorem2-regular-patch-2026-11-11
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check frozen archive
+        run: |
+          sha256sum --check SHA256SUMS.txt
+          test "$(wc -l < SHA256SUMS.txt)" -eq 65
+      - name: Install pinned Lean and Mathlib cache
+        run: |
+          curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          export PATH="$HOME/.elan/bin:$PATH"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          lean --version
+          lake exe cache get
+          test "$(git -C .lake/packages/mathlib rev-parse HEAD)" = ccd6c8476363fc81f2e4bee2eeb1a62c99338549
+          sha256sum --check SHA256SUMS.txt
+      - name: Compile archive and compare axiom audits
+        run: |
+          python3 - <<'PY'
+          import collections, pathlib, re, subprocess
+          root = pathlib.Path.cwd()
+          logs = root / 'fresh-verification'
+          logs.mkdir(exist_ok=False)
+          modules = {p.stem: p for p in root.glob('*.lean')}
+          if len(modules) != 31:
+              raise SystemExit(f'Expected 31 modules, found {len(modules)}')
+          deps = {}
+          for name, path in modules.items():
+              source = path.read_text(encoding='utf-8-sig')
+              imports = set()
+              for line in re.findall(r'^\s*(?:public\s+)?import\s+([^\n]+)', source, re.M):
+                  imports.update(line.split('--', 1)[0].split())
+              deps[name] = imports & modules.keys()
+          outdir = root / '.lake/build/lib/lean'
+          outdir.mkdir(parents=True, exist_ok=True)
+          allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+          pattern = re.compile(r"'([^']+)' depends on axioms:\s*\[([^\]]*)\]|'([^']+)' does not depend on any axioms")
+          def audit(text):
+              result = collections.Counter()
+              for name, axioms, empty in pattern.findall(text):
+                  aset = frozenset(a.strip() for a in axioms.split(',') if a.strip())
+                  if not aset <= allowed:
+                      raise SystemExit(f'Unexpected axioms: {name}: {aset}')
+                  result[(name or empty, aset)] += 1
+              return result
+          completed = set()
+          total = collections.Counter()
+          while len(completed) < len(modules):
+              ready = sorted(n for n in modules.keys() - completed if deps[n] <= completed)
+              if not ready:
+                  raise SystemExit('Unresolved local import cycle')
+              for name in ready:
+                  print(f'Compiling {name}', flush=True)
+                  result = subprocess.run(['lake', 'env', 'lean', '-o', str(outdir / (name + '.olean')), modules[name].name], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding='utf-8', errors='replace')
+                  (logs / (name + '.log')).write_text(result.stdout, encoding='utf-8')
+                  print(result.stdout, flush=True)
+                  if result.returncode or re.search(r'\bsorryAx\b|declaration uses .sorry.', result.stdout):
+                      raise SystemExit(f'Compilation or admitted-proof failure: {name}')
+                  expected = audit((root / (name + '-release-build.txt')).read_text(encoding='utf-8-sig'))
+                  actual = audit(result.stdout)
+                  if actual != expected:
+                      raise SystemExit(f'Audit mismatch in {name}: missing={expected-actual}, extra={actual-expected}')
+                  total.update(actual)
+                  completed.add(name)
+          names = {name for name, _ in total}
+          required = {'BakerSpherical.AreaLaw.spherical_area_law', 'BakerSpherical.AreaLaw.richardson_fourth_order'}
+          if not required <= names or len(names) != 126:
+              raise SystemExit(f'Unexpected audit coverage: {len(names)} distinct declarations, {sum(total.values())} audit lines')
+          summary = f'PASS: {len(completed)} modules; {len(names)} distinct audited declarations; {sum(total.values())} audit lines; standard axioms only.'
+          print(summary)
+          (logs / 'SUMMARY.txt').write_text(summary + '\n', encoding='utf-8')
+          PY
+          sha256sum --check SHA256SUMS.txt
+      - name: Preserve fresh verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: spherical-lean-verification-logs
+          path: lean-verification/theorem2-regular-patch-2026-11-11/fresh-verification/
+          if-no-files-found: warn
